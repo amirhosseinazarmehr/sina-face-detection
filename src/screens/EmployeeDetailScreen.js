@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Button, TextInput, Card, Chip } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EmployeeLog from '../components/EmployeeLog';
@@ -13,21 +13,21 @@ export default function EmployeeDetailScreen({ onBack }) {
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Button mode="outlined" icon="arrow-left" onPress={onBack} style={styles.backButton}>
+    <ScrollView className="p-4">
+      <Button mode="outlined" icon="arrow-left" onPress={onBack} className="mb-4">
         Back to Dashboard
       </Button>
       <TextInput
         label="Search Employee"
         value={query}
         onChangeText={setQuery}
-        style={styles.search}
+        className="mb-2"
         left={<TextInput.Icon icon="magnify" />}
       />
       {filtered.map(emp => (
         <Chip
           key={emp.id}
-          style={styles.chip}
+          className="mb-1 self-start"
           icon="account"
           onPress={() => {
             setSelected(emp);
@@ -38,41 +38,41 @@ export default function EmployeeDetailScreen({ onBack }) {
         </Chip>
       ))}
       {selected && (
-        <View style={styles.detailContainer}>
-          <Text style={styles.header}>{selected.name}</Text>
-          <Card style={styles.cameraCard}>
-            <View style={styles.cameraMock}>
+        <View className="mt-4">
+          <Text className="text-2xl font-bold mb-4">{selected.name}</Text>
+          <Card className="mb-4 p-4">
+            <View className="relative h-52 justify-center items-center bg-gray-100">
               <Icon name="camera" size={64} color="#888" />
               {selected.faceDetected ? (
-                <View style={styles.faceBox}>
-                  <Text style={styles.faceText}>{selected.name}</Text>
+                <View className="absolute top-5 left-5 border-2 border-green-500 p-1">
+                  <Text className="text-green-600 font-bold">{selected.name}</Text>
                 </View>
               ) : (
-                <Text style={styles.absentText}>
+                <Text className="absolute bottom-2 text-red-600 font-bold">
                   {selected.name.split(' ')[0]} is not in the camera view (Absent)
                 </Text>
               )}
             </View>
           </Card>
-          <View style={styles.statusRow}>
-            <Text style={styles.statusText}>
+          <View className="mb-2">
+            <Text className="text-lg">
               Status:{' '}
               {selected.isPresent ? (
-                <Text style={styles.present}>✔ Present</Text>
+                <Text className="text-green-600">✔ Present</Text>
               ) : (
-                <Text style={styles.absent}>✘ Absent</Text>
+                <Text className="text-red-600">✘ Absent</Text>
               )}
             </Text>
           </View>
-          <View style={styles.timers}>
-            <Chip icon="timer" style={styles.timerChip}>
+          <View className="flex-row justify-between mb-4">
+            <Chip icon="timer" className="mr-2">
               Presence: {selected.presenceDuration}
             </Chip>
-            <Chip icon="timer" style={styles.timerChip}>
+            <Chip icon="timer">
               In Front of Camera: {selected.activityDuration}
             </Chip>
           </View>
-          <Text style={styles.logTitle}>Today Logs</Text>
+          <Text className="text-lg font-bold mb-2">Today Logs</Text>
           {selected.logs.map((log, idx) => (
             <EmployeeLog key={idx} time={log.time} type={log.type} />
           ))}
@@ -81,81 +81,3 @@ export default function EmployeeDetailScreen({ onBack }) {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  backButton: {
-    marginBottom: 16,
-  },
-  search: {
-    marginBottom: 8,
-  },
-  chip: {
-    marginBottom: 4,
-    alignSelf: 'flex-start',
-  },
-  detailContainer: {
-    marginTop: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  cameraCard: {
-    marginBottom: 16,
-    padding: 16,
-  },
-  cameraMock: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: '#f0f0f0',
-  },
-  faceBox: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-    borderColor: 'green',
-    borderWidth: 2,
-    padding: 4,
-  },
-  faceText: {
-    color: 'green',
-    fontWeight: 'bold',
-  },
-  absentText: {
-    position: 'absolute',
-    bottom: 10,
-    color: 'red',
-    fontWeight: 'bold',
-  },
-  statusRow: {
-    marginBottom: 8,
-  },
-  statusText: {
-    fontSize: 16,
-  },
-  present: {
-    color: 'green',
-  },
-  absent: {
-    color: 'red',
-  },
-  timers: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  timerChip: {
-    marginRight: 8,
-  },
-  logTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-});

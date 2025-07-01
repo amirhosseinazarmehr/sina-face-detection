@@ -1,11 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { View, StyleSheet } from 'react-native';
-import {
-  Button,
-  Menu,
-  TextInput,
-  DataTable,
-} from 'react-native-paper';
+import { View } from 'react-native';
+import { Button, Menu, DataTable } from 'react-native-paper';
 import * as XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -44,8 +39,8 @@ export default function AttendanceReportScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.filters}>
+    <View className="flex-1 p-4">
+      <View className="flex-row flex-wrap mb-4">
         <Menu
           visible={dateVisible}
           onDismiss={() => setDateVisible(false)}
@@ -53,7 +48,7 @@ export default function AttendanceReportScreen() {
             <Button
               mode="outlined"
               onPress={() => setDateVisible(true)}
-              style={styles.filterButton}
+              className="mr-2 mb-2"
             >
               {selectedDate}
             </Button>
@@ -85,7 +80,7 @@ export default function AttendanceReportScreen() {
             <Button
               mode="outlined"
               onPress={() => setEmployeeVisible(true)}
-              style={styles.filterButton}
+              className="mr-2 mb-2"
             >
               {selectedEmployee}
             </Button>
@@ -110,7 +105,7 @@ export default function AttendanceReportScreen() {
           ))}
         </Menu>
 
-        <Button mode="contained" onPress={exportExcel} style={styles.export}>
+        <Button mode="contained" onPress={exportExcel} className="ml-auto mb-2">
           Export to Excel
         </Button>
       </View>
@@ -138,23 +133,3 @@ export default function AttendanceReportScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  filters: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 16,
-  },
-  filterButton: {
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  export: {
-    marginLeft: 'auto',
-    marginBottom: 8,
-  },
-});
