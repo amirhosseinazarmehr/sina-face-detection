@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
-import { Button, TextInput, Card, Chip } from 'react-native-paper';
+import { Button, Searchbar, Card, Chip, List } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import EmployeeLog from '../components/EmployeeLog';
 import { employees } from '../data/mockEmployee';
@@ -8,6 +8,7 @@ import { employees } from '../data/mockEmployee';
 export default function EmployeeDetailScreen({ onBack }) {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
+  const [showResults, setShowResults] = useState(false);
   const filtered = employees.filter(e =>
     e.name.toLowerCase().includes(query.toLowerCase())
   );
@@ -17,26 +18,34 @@ export default function EmployeeDetailScreen({ onBack }) {
       <Button mode="outlined" icon="arrow-left" onPress={onBack} className="mb-4">
         Back to Dashboard
       </Button>
-      <TextInput
-        label="Search Employee"
-        value={query}
-        onChangeText={setQuery}
-        className="mb-2"
-        left={<TextInput.Icon icon="magnify" />}
-      />
-      {filtered.map(emp => (
-        <Chip
-          key={emp.id}
-          className="mb-1 self-start"
-          icon="account"
-          onPress={() => {
-            setSelected(emp);
-            setQuery(emp.name);
+      <View className="mb-2">
+        <Searchbar
+          placeholder="Search Employee"
+          value={query}
+          onChangeText={text => {
+            setQuery(text);
+            setSelected(null);
+            setShowResults(true);
           }}
-        >
-          {emp.name}
-        </Chip>
-      ))}
+          onFocus={() => setShowResults(true)}
+        />
+        {showResults && query.length > 0 && (
+          <Card className="mt-1">
+            {filtered.map(emp => (
+              <List.Item
+                key={emp.id}
+                title={emp.name}
+                left={props => <List.Icon {...props} icon="account" />}
+                onPress={() => {
+                  setSelected(emp);
+                  setQuery(emp.name);
+                  setShowResults(false);
+                }}
+              />
+            ))}
+          </Card>
+        )}
+      </View>
       {selected && (
         <View className="mt-4">
           <Text className="text-2xl font-bold mb-4">{selected.name}</Text>
